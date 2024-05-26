@@ -1,18 +1,15 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::get('estimations/sum_by_project', ['App\Http\Controllers\EstimationController', 'sumByProject']);
+Route::post('clients', 'App\Http\Controllers\Api\ClientController@store');
+Route::apiResource('clients', ClientController::class);
+Route::apiResource('projects', ProjectController::class);
+Route::apiResource('estimations', EstimationController::class);
 
+// Добавим также проверку для маршрута пользователя
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
