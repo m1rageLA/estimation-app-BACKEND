@@ -17,6 +17,8 @@ class CreateClientsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('country');
+            $table->string('avatar')->nullable(); // новое поле для изображения
             $table->timestamps();
         });
     }

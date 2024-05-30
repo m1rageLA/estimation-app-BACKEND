@@ -16,15 +16,24 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:clients',
+            'country' => 'required|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $client = Client::create($request->all());
+        if ($request->hasFile('avatar')) {
+            $avatarName = time() . '.' . $request->avatar->extension();
+            $request->avatar->storeAs('', $avatarName, 'custom_public');
+            $validated['avatar'] = '' . $avatarName;
+        }
 
-        return response()->json($client, 201);
+        $client = Client::create($validated);
+
+        return response()->json(['message' => 'Client created successfully.'], 201);
     }
+
 
     public function show(Client $client)
     {
@@ -61,7 +70,6 @@ class ClientController extends Controller
 
         return response()->json(['total' => $total]);
     }
-
 
 
 }
