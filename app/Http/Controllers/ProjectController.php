@@ -16,15 +16,32 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'client_id' => 'required|exists:clients,id',
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'client' => 'required|string',
+            'estimate' => 'required|string',
+            'preview' => 'required|image',
         ]);
 
-        $project = Project::create($request->all());
+        $project = new Project();
+        $project->name = $validatedData['name'];
+        $project->client = $validatedData['client'];
+        $project->estimate = $validatedData['estimate'];
+
+        // Генерируем уникальное имя для изображения
+        $previewName = uniqid('preview_', true) . '.' . $request->file('preview')->extension();
+
+        // Сохраняем изображение на сервере с указанием нужного диска и уникального имени
+        $request->file('preview')->storeAs('', $previewName, 'custom_public');
+
+        // Сохраняем только имя изображения в базе данных
+        $project->preview = $previewName;
+
+        $project->save();
 
         return response()->json($project, 201);
     }
+
 
     public function show(Project $project)
     {
@@ -43,10 +60,12 @@ class ProjectController extends Controller
         return response()->json($project);
     }
 
-    public function destroy(Project $project)
+    public function destroy($id)
     {
+        $project = Project::findOrFail($id);
         $project->delete();
-        return response()->json(null, 204);
+
+        return response()->json(['success' => true, 'message' => 'Project deleted successfully']);
     }
 
     public function sumByProject(Request $request)
@@ -61,5 +80,4 @@ class ProjectController extends Controller
 
         return response()->json(['total' => $total]);
     }
-
 }

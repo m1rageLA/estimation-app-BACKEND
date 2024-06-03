@@ -52,10 +52,12 @@ class ClientController extends Controller
         return response()->json($client);
     }
 
-    public function destroy(Client $client)
+    public function destroy($id)
     {
+        $client = Client::findOrFail($id);
         $client->delete();
-        return response()->json(null, 204);
+
+        return response()->json(['success' => true, 'message' => 'Client deleted successfully']);
     }
 
     public function sumByProject(Request $request)
