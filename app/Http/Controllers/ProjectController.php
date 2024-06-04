@@ -19,14 +19,14 @@ class ProjectController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string',
             'client' => 'required|string',
-            'estimate' => 'required|string',
+            'description' => 'required|string',
             'preview' => 'required|image',
         ]);
 
         $project = new Project();
         $project->name = $validatedData['name'];
         $project->client = $validatedData['client'];
-        $project->estimate = $validatedData['estimate'];
+        $project->description = $validatedData['description'];
 
         // Генерируем уникальное имя для изображения
         $previewName = uniqid('preview_', true) . '.' . $request->file('preview')->extension();
