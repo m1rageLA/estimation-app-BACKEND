@@ -10,6 +10,8 @@ Route::get('clients', [ClientController::class, 'index']);
 Route::delete('/clients/delete/{id}', [ClientController::class, 'destroy']);
 Route::apiResource('clients', ClientController::class);
 
+Route::post('images', ['App\Http\Controllers\ImageController', 'store']);
+
 Route::post('projects', [ProjectController::class, 'store']);
 Route::get('projects', [ProjectController::class, 'index']);
 Route::delete('/projects/delete/{id}', [ProjectController::class, 'destroy']);

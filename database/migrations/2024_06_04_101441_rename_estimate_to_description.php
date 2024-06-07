@@ -14,8 +14,8 @@ class RenameEstimateToDescription extends Migration
     public function up()
     {
         Schema::table('projects', function (Blueprint $table) {
-            // Remove the 'estimate' column
-            $table->dropColumn('estimate');
+            // Удаляем колонку estimate
+            //$table->dropColumn('estimate');
         });
     }
 
