@@ -17,7 +17,11 @@ Route::get('projects', [ProjectController::class, 'index']);
 Route::delete('/projects/delete/{id}', [ProjectController::class, 'destroy']);
 Route::apiResource('projects', ProjectController::class);
 
-Route::apiResource('estimations', EstimationController::class);
+Route::post('estimates', [EstimationController::class, 'store']);
+Route::get('estimates', [EstimationController::class, 'index']);
+Route::delete('/clients/delete/{id}', [EstimationController::class, 'destroy']);
+Route::apiResource('estimates', EstimationController::class);
+
 Route::get('/storage/{filename}', function ($filename) {
     $path = storage_path('app/public/' . $filename);
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEstimationsTable extends Migration
+class AddDateToEstimationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,22 +15,20 @@ class CreateEstimationsTable extends Migration
     {
         Schema::create('estimations', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
+            $table->text('description');
+            $table->string('type');
+            $table->decimal('cost', 10, 2);
             $table->unsignedBigInteger('project_id');
-            $table->enum('type', ['hourly', 'fixed']);
-            $table->decimal('amount', 8, 2);
+            $table->date('date')->nullable();
             $table->timestamps();
-
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('estimations');
     }
+
+
 }

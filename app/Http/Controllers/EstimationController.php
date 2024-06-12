@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Estimation;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class EstimationController extends Controller
 {
@@ -15,13 +16,24 @@ class EstimationController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'cost' => 'required|numeric|min:0',
             'project_id' => 'required|exists:projects,id',
-            'type' => 'required|in:hourly,fixed',
-            'amount' => 'required|numeric|min:0',
+            'date' => 'sometimes|required|date'
         ]);
 
-        $estimation = Estimation::create($request->all());
+        // Если дата предоставлена, сконвертируйте ее в формат YYYY-MM-DD
+        if (isset($validated['date'])) {
+            $validated['date'] = Carbon::parse($validated['date'])->toDateString();
+        } else {
+            // Если дата не предоставлена, установите значение по умолчанию на текущую дату
+            $validated['date'] = now()->toDateString();
+        }
+
+        $estimation = Estimation::create($validated);
 
         return response()->json($estimation, 201);
     }
@@ -33,13 +45,16 @@ class EstimationController extends Controller
 
     public function update(Request $request, Estimation $estimation)
     {
-        $request->validate([
-            'project_id' => 'exists:projects,id',
-            'type' => 'in:hourly,fixed',
-            'amount' => 'numeric|min:0',
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string|max:255',
+            'type' => 'sometimes|required|string|max:255',
+            'cost' => 'sometimes|required|numeric|min:0',
+            'project_id' => 'sometimes|exists:projects,id',
+            'date' => 'sometimes|required|date'
         ]);
 
-        $estimation->update($request->all());
+        $estimation->update($validated);
 
         return response()->json($estimation);
     }
@@ -58,10 +73,8 @@ class EstimationController extends Controller
             $query->where('project_id', $request->project_id);
         }
 
-        $total = $query->sum('amount');
+        $total = $query->sum('cost');
 
         return response()->json(['total' => $total]);
     }
-
 }
-
