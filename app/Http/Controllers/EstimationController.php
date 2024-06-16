@@ -21,15 +21,14 @@ class EstimationController extends Controller
             'description' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'cost' => 'required|numeric|min:0',
-            'project_id' => 'required|exists:projects,id',
+            'project_id' => 'required|exists:projects,id', // Убедитесь, что project_id обязательный и существует
             'date' => 'sometimes|required|date'
         ]);
 
-        // Если дата предоставлена, сконвертируйте ее в формат YYYY-MM-DD
+        // Handle date conversion if provided
         if (isset($validated['date'])) {
             $validated['date'] = Carbon::parse($validated['date'])->toDateString();
         } else {
-            // Если дата не предоставлена, установите значение по умолчанию на текущую дату
             $validated['date'] = now()->toDateString();
         }
 
@@ -38,6 +37,8 @@ class EstimationController extends Controller
         return response()->json($estimation, 201);
     }
 
+
+
     public function show(Estimation $estimation)
     {
         return response()->json($estimation);
@@ -45,19 +46,37 @@ class EstimationController extends Controller
 
     public function update(Request $request, Estimation $estimation)
     {
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string|max:255',
-            'type' => 'sometimes|required|string|max:255',
-            'cost' => 'sometimes|required|numeric|min:0',
-            'project_id' => 'sometimes|exists:projects,id',
-            'date' => 'sometimes|required|date'
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'sometimes|required|string|max:255',
+                'description' => 'sometimes|required|string|max:255',
+                'type' => 'sometimes|required|string|max:255',
+                'cost' => 'sometimes|required|numeric|min:0',
+                'project_id' => 'sometimes|required|exists:projects,id', // Убедитесь, что project_id требуется и существует
+                'date' => 'sometimes|required|date'
+            ]);
 
-        $estimation->update($validated);
+            // Handle date conversion if provided
+            if ($request->has('date')) {
+                $validated['date'] = Carbon::parse($validated['date'])->toDateString();
+            }
 
-        return response()->json($estimation);
+            // Update the specified fields if present in $validated
+            $estimation->fill($validated);
+            $estimation->save();
+
+            return response()->json(['message' => 'Estimation updated successfully']);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
+
+
+
+
+
+
 
     public function destroy(Estimation $estimation)
     {

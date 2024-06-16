@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('estimations/sum_by_project', ['App\Http\Controllers\EstimationController', 'sumByProject']);
 
 Route::post('clients', [ClientController::class, 'store']);
@@ -20,6 +21,7 @@ Route::apiResource('projects', ProjectController::class);
 Route::post('estimates', [EstimationController::class, 'store']);
 Route::get('estimates', [EstimationController::class, 'index']);
 Route::delete('/clients/delete/{id}', [EstimationController::class, 'destroy']);
+Route::put('/estimates/{estimation}', ['App\Http\Controllers\EstimationController', 'update']);
 Route::apiResource('estimates', EstimationController::class);
 
 Route::get('/storage/{filename}', function ($filename) {
