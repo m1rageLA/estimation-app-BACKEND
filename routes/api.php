@@ -20,7 +20,7 @@ Route::apiResource('projects', ProjectController::class);
 
 Route::post('estimates', [EstimationController::class, 'store']);
 Route::get('estimates', [EstimationController::class, 'index']);
-Route::delete('/clients/delete/{id}', [EstimationController::class, 'destroy']);
+Route::delete('/estimates/delete/{id}', [EstimationController::class, 'destroy']);
 Route::put('/estimates/{estimation}', ['App\Http\Controllers\EstimationController', 'update']);
 Route::apiResource('estimates', EstimationController::class);
 

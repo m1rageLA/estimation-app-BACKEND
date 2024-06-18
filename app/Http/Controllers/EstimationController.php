@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
 use App\Estimation;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -78,11 +79,15 @@ class EstimationController extends Controller
 
 
 
-    public function destroy(Estimation $estimation)
+
+    public function destroy($estimation)
     {
+        $estimation = Estimation::findOrFail($estimation);
         $estimation->delete();
-        return response()->json(null, 204);
+
+        return response()->json(['success' => true, 'message' => 'Estimate deleted successfully']);
     }
+
 
     public function sumByProject(Request $request)
     {
