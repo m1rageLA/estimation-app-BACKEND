@@ -11,8 +11,8 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        // Retrieve projects belonging to the authenticated user
-        $projects = Auth::user()->projects;
+        $projects = Project::where('user_id', auth()->id())->get();
+
         return response()->json($projects);
     }
 

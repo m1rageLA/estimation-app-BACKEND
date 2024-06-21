@@ -11,8 +11,8 @@ class EstimationController extends Controller
 {
     public function index()
     {
-        // Retrieve estimations belonging to the authenticated user
-        $estimations = Auth::user()->estimations;
+        $estimations = Estimation::where('user_id', auth()->id())->get();
+
         return response()->json($estimations);
     }
 
