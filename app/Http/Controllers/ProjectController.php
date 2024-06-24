@@ -34,8 +34,7 @@ class ProjectController extends Controller
         $previewName = uniqid('preview_', true) . '.' . $request->file('preview')->getClientOriginalExtension();
 
         // Store the image with the generated unique name on the server
-        $request->file('preview')->storeAs('previews', $previewName, 'public');
-
+        $request->file('preview')->storeAs('previews', $previewName, 'custom_public');
         // Store only the image name in the database
         $project->preview = $previewName;
 

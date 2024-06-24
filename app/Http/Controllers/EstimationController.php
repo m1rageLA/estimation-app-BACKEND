@@ -14,6 +14,7 @@ class EstimationController extends Controller
         $estimations = Estimation::where('user_id', auth()->id())->get();
 
         return response()->json($estimations);
+
     }
 
     public function store(Request $request)

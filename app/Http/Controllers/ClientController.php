@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Estimation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,7 +31,8 @@ class ClientController extends Controller
 
             if ($request->hasFile('avatar')) {
                 $avatarName = time() . '.' . $request->avatar->getClientOriginalExtension();
-                $request->avatar->storeAs('avatars', $avatarName, 'public');
+                $request->avatar->storeAs('', $avatarName, 'custom_public');
+
                 $validated['avatar'] = $avatarName;
             }
 
@@ -41,6 +43,30 @@ class ClientController extends Controller
             return response()->json(['error' => 'Failed to create client'], 500);
         }
     }
+    public function destroy(Client $client)
+    {
+        if ($client->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        $client->delete();
 
+        return response()->json(['success' => true, 'message' => 'Estimation deleted successfully']);
+    }
+
+    public function update(Request $request, Client $client)
+    {
+        $request->validate([
+            'name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:clients,email,' . $client->id,
+        ]);
+
+        if ($client->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $client->update($request->all());
+
+        return response()->json($client);
+    }
     // Другие методы (show, update, destroy) следует аналогично обернуть в блок try-catch
 }

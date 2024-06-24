@@ -20,6 +20,8 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/estimates/{estimation}', ['App\Http\Controllers\EstimationController', 'update']);
     Route::apiResource('estimates', EstimationController::class);
 
+    Route::put('update', ['App\Http\Controllers\AuthController', 'update']);
+
     Route::get('/login/{id}', ['App\Http\Controllers\AuthController', 'getUser'])->name('getUser');
 });
 
