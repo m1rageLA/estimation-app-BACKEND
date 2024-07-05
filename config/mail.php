@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'live.smtp.mailtrap.io'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,20 +56,9 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'mailtrap@demomailtrap.com'),
+        'name' => env('MAIL_FROM_NAME', 'Reset password'),
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | E-Mail Encryption Protocol
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify the encryption protocol that should be used when
-    | the application send e-mail messages. A sensible default using the
-    | transport layer security protocol should provide great security.
-    |
-    */
 
     'encryption' => env('MAIL_ENCRYPTION', 'tls'),
 

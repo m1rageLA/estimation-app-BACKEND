@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Mail\TestMail; // Создайте класс для тестового письма
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
@@ -24,6 +26,20 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/login/{id}', ['App\Http\Controllers\AuthController', 'getUser'])->name('getUser');
 });
+
+// Маршрут для страницы ввода email для сброса пароля
+Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+
+
+Route::get('/send-test-email', function () {
+    Mail::to('miragela.code@gmail.com')->send(new TestMail());
+    return 'Тестовое письмо отправлено!';
+});
+Route::get('password/reset', ['App\Http\Controllers\Auth\ForgotPasswordController', 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', ['App\Http\Controllers\Auth\ForgotPasswordController', 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', ['App\Http\Controllers\Auth\ResetPasswordController', 'showResetForm'])->name('password.reset');
+Route::post('password/reset', ['App\Http\Controllers\Auth\ResetPasswordController', 'reset'])->name('password.update');
+
 
 
 Route::post('/register', ['App\Http\Controllers\AuthController', 'register'])->name('register');
